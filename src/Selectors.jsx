@@ -45,6 +45,14 @@ class Selectors extends Component {
     .catch(error => console.log(error));
   }
 
+  getDelays() {
+    axios.get(`http://ec2-3-18-105-71.us-east-2.compute.amazonaws.com/v1/api/initDelay/${this.state.line}/${this.state.stationTag}`)
+    .then(response => {
+      this.props.updateDelays(response.data);
+    })
+    .catch(error => console.log(error));
+  }
+  
   routeSelect(route) {
     route = route.split('-');
     this.setState({
@@ -56,7 +64,10 @@ class Selectors extends Component {
   stationSelect(stationTag) {
     this.setState({
       stationTag: stationTag
-    }, this.getPredictions);
+    }, () => {
+      this.getPredictions();
+      this.getDelays();
+    });
   }
 
   render() {
